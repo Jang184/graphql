@@ -1,19 +1,9 @@
-import { execute, parse } from "graphql";
+import { createServer } from "graphql-yoga";
 import { schema } from "./schema";
 
-async function main() {
-  const myQuery = parse(`
-    query{
-      hello
-    }
-  `);
-
-  const result = await execute({
-    schema,
-    document: myQuery,
-  });
-
-  console.log(result);
+function main() {
+  const server = createServer({ schema });
+  server.start();
 }
 
 main();
