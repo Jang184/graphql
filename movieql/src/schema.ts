@@ -6,6 +6,10 @@ type Query {
   feed: [Link!]!
 }
 
+type Mutation {
+  postLink(url: String!, description: String!): Link!
+}
+
 type Link {
   id: ID!
   description: String!
@@ -32,7 +36,21 @@ const resolvers = {
     info: () => `This is the very first API I've made`,
     feed: () => links,
   },
+  Mutation: {
+    postLink: (parent: unknown, args: { description: string; url: string }) => {
+      let idCount = links.length;
 
+      const link: Link = {
+        id: `juri-${idCount}`,
+        description: args.description,
+        url: args.url,
+      };
+
+      links.push(link);
+
+      return link;
+    },
+  },
   Link: {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
