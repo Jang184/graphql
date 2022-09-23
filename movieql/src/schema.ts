@@ -1,21 +1,45 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 
-// GraphQL schema definition
 const typeDefinitions = `
 type Query {
-  hello: String!
+  info: String!
+  feed: [Link!]!
+}
+
+type Link {
+  id: ID!
+  description: String!
+  url: String!
 }
 `;
 
-// actual implementation of the GraphQL schema
+type Link = {
+  id: string;
+  url: string;
+  description: string;
+};
+
+const links: Link[] = [
+  {
+    id: "juri",
+    url: "https://jang184.github.io",
+    description: "juri's blog",
+  },
+];
+
 const resolvers = {
   Query: {
-    hello: () => "Hello World!",
+    info: () => `This is the very first API I've made`,
+    feed: () => links,
+  },
+
+  Link: {
+    id: (parent: Link) => parent.id,
+    description: (parent: Link) => parent.description,
+    url: (parent: Link) => parent.url,
   },
 };
 
-// a combination of the GraphQL SDL and the resolvers
-// gluing them together into an executable schema
 export const schema = makeExecutableSchema({
   resolvers: [resolvers],
   typeDefs: [typeDefinitions],
